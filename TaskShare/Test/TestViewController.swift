@@ -115,7 +115,7 @@ class TestViewController: UIViewController {
                 print(error!.localizedDescription)
                 return
             }
-            
+
             snapshot?.documents.forEach { (document) in
                 let data = document.data()
                 print("title: \(data["title"] as! String)")

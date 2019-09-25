@@ -15,8 +15,8 @@ class TopTabBarPagerViewController: ButtonBarPagerTabStripViewController {
         settings.style.buttonBarBackgroundColor = UIColor.hex(string: "#4169e1", alpha: 1.0)
         settings.style.buttonBarItemBackgroundColor = UIColor.hex(string: "#4169e1", alpha: 1.0)
         settings.style.buttonBarItemFont = .boldSystemFont(ofSize: 14)
-        settings.style.selectedBarBackgroundColor = .white
-        settings.style.selectedBarHeight = 2.0
+        settings.style.selectedBarBackgroundColor = .black
+        settings.style.selectedBarHeight = 4.0
         settings.style.buttonBarMinimumLineSpacing = 0.0
         settings.style.buttonBarRightContentInset = 0.0
         settings.style.buttonBarLeftContentInset = 0.0
