@@ -18,6 +18,8 @@ protocol FirebaseActionProtocol {
     func registerFriendTask(id: String, task: TaskModel) -> Observable<Void>
     func updateTask() -> Observable<QuerySnapshot>
     func getAllMyTasks() -> Observable<QuerySnapshot>
+    func getFriendTask(id: String) -> Observable<QuerySnapshot>
+    func getAllFriends() -> Observable<QuerySnapshot>
 }
 
 final class FirebaseActionModel: FirebaseActionProtocol {
@@ -109,12 +111,12 @@ final class FirebaseActionModel: FirebaseActionProtocol {
                 .collection("tasks")
             
             userRef.addDocument(data: ["title": task.title,
-            "description": task.description,
-            "createdAt": task.createdAt,
-            "createUserName": user.displayName!,
-            "assignedUserName": user.displayName!,
-            "time": task.time,
-            "lcoation": task.location]) { (error) in
+                                       "description": task.description,
+                                       "createdAt": task.createdAt,
+                                       "createUserName": user.displayName!,
+                                       "assignedUserName": user.displayName!,
+                                       "time": task.time,
+                                       "lcoation": task.location]) { error in
                 guard error == nil else {
                     print(error!.localizedDescription)
                     return observer.onError(error!)
@@ -124,13 +126,13 @@ final class FirebaseActionModel: FirebaseActionProtocol {
                                            "createUserRef": self.db.collection("users").document(user.uid),
                                            "assignedUserRef": self.db.collection("users").document(user.uid)]) { error in
                     
-                                            guard error == nil else {
-                                                print(error!.localizedDescription)
-                                                observer.onError(error!)
-                                                return
-                                            }
-                                            
-                                            observer.onNext(())
+                    guard error == nil else {
+                        print(error!.localizedDescription)
+                        observer.onError(error!)
+                        return
+                    }
+                    
+                    observer.onNext(())
                 }
             }
             
@@ -139,7 +141,11 @@ final class FirebaseActionModel: FirebaseActionProtocol {
     }
     
     func registerFriendTask(id: String, task: TaskModel) -> Observable<Void> {
-        return Observable.empty()
+        return Observable.create { _ in
+            let disposables = Disposables.create()
+            
+            return disposables
+        }
     }
     
     func updateTask() -> Observable<QuerySnapshot> {
@@ -175,10 +181,88 @@ final class FirebaseActionModel: FirebaseActionProtocol {
     func getAllMyTasks() -> Observable<QuerySnapshot> {
         return Observable.empty()
     }
+    
+    func getFriendTask(id: String) -> Observable<QuerySnapshot> {
+        return Observable.create { [unowned self] observer in
+            let disposables = Disposables.create()
+            
+            guard let user = self.user else {
+                observer.onError(FireDefaultError.unexpected)
+                return disposables
+            }
+            
+            let tasksRef = self.db.collection("tasks")
+            
+            let myUserRef = self.db.collection("users").document(user.uid)
+            let userRef = self.db.collection("users").document(id)
+            
+            tasksRef
+                .whereField("assignedUserRef", isEqualTo: userRef)
+                .whereField("createUserRef", isEqualTo: myUserRef)
+                .addSnapshotListener { snapshot, error in
+                    guard error == nil else {
+                        print(error!.localizedDescription)
+                        return
+                    }
+                    
+                    snapshot?.documents.forEach { document in
+                        let data = document.data()
+                        
+                        let id = data["id"] as! String
+                        print("taskid:" +  id)
+                        
+                        let userTaskRef = userRef.collection("tasks")
+                            
+                        userTaskRef
+                          .whereField("id", isEqualTo: id)
+                            .addSnapshotListener { (snapshot, error) in
+                                guard error == nil else {
+                                    print(error!.localizedDescription)
+                                    observer.onError(error!)
+                                    return
+                                }
+                                
+                                guard let snapshot = snapshot else {
+                                    observer.onError(error!)
+                                    return
+                                }
+                                
+                                observer.onNext(snapshot)
+                        }
+                    }
+                }
+            return disposables
+        }
+    }
+    
+    func getAllFriends() -> Observable<QuerySnapshot> {
+        return Observable.create { [unowned self] observer  in
+            let disposables = Disposables.create()
+            
+            let ref = self.db.collection("friends")
+            
+            ref.addSnapshotListener { snapshot, error in
+                guard error == nil else {
+                    print(error!.localizedDescription)
+                    observer.onError(error!)
+                    return
+                }
+                
+                guard let snapshot = snapshot else {
+                    observer.onError(error!)
+                    return
+                }
+                
+                observer.onNext(snapshot)
+            }
+            
+            return disposables
+        }
+    }
 }
 
 extension FirebaseActionModel {
-    func handleSnapshot(snap: QuerySnapshot, complition: @escaping([TaskModel]) -> ()) {
+    func handleSnapshot(snap: QuerySnapshot, complition: @escaping ([TaskModel]) -> Void) {
         snap.documents.forEach { change in
             var tasks = [TaskModel]()
             
@@ -198,10 +282,9 @@ extension FirebaseActionModel {
                                  createUserName: createUserName,
                                  assignedUserName: assignedUserName, time: time, location: location)
             
-            tasks.append(task)
+            print(title)
             
-            print(task.title)
-            print(task.description)
+            tasks.append(task)
             
             complition(tasks)
         }

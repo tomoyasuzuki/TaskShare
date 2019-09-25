@@ -98,7 +98,6 @@ extension MyTaskViewController {
         output
             .reloadData
             .drive(onNext: { _ in
-                print("reload")
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
