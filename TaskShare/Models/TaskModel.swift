@@ -10,14 +10,18 @@ import Foundation
 class TaskModel {
     let title: String
     let description: String
-    let createdAt: Date
-    let time: Date
+    let createdAt: String
+    let createUserName: String
+    let assignedUserName: String
+    let time: String
     let location: String
     
-    init(title: String, description: String, createdAt: Date, time: Date, location: String) {
+    init(title: String, description: String, createdAt: String, createUserName: String, assignedUserName: String, time: String, location: String) {
         self.title = title
         self.description = description
         self.createdAt = createdAt
+        self.createUserName = createUserName
+        self.assignedUserName = assignedUserName
         self.time = time
         self.location = location
     }
