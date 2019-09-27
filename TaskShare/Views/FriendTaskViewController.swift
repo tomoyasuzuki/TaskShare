@@ -84,7 +84,8 @@ extension FriendTaskViewController {
     private func configureViewModel() {
         viewModel = FriendTaskViewModel(firebaseActionModel: FirebaseActionModel())
         
-        let input = FriendTaskViewModel.Input(viewWillAppear: rx.viewWillAppear.asDriver(),
+        let input = FriendTaskViewModel.Input(loadView: rx.loadView.asDriver(),
+                                              viewWillAppear: rx.viewWillAppear.asDriver(),
                                               addFriendTaskButtonTapped: addFriendTaskButton.rx.tap.asDriver())
         
         let output = viewModel.build(input: input)

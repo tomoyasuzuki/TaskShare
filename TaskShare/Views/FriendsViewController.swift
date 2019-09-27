@@ -8,23 +8,64 @@
 
 import UIKit
 import XLPagerTabStrip
+import RxSwift
+import RxCocoa
 
 class FriendsViewController: UIViewController {
-
-    private lazy var containerView: UIView = {
-        let containerView = UIView()
-        containerView.backgroundColor = UIColor.white
-        return containerView
+    
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        return tableView
     }()
+    
+    private var viewModel: FriendsViewModel!
+    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
-        view.addSubview(containerView)
-        containerView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "FriendsTableViewCell")
+        
+        view.addSubview(tableView)
+        
+        configureViewModel()
+        configureConstraints()
+    }
+}
+
+extension FriendsViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.friends.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "FriendsTableViewCell", for: indexPath)
+        cell.textLabel?.text = viewModel.friends[indexPath.row].name
+        return cell
+    }
+}
+
+extension FriendsViewController {
+    private func configureConstraints() {
+        tableView.snp.makeConstraints { make in
+            make.edges.equalTo(view)
         }
+    }
+    
+    private func configureViewModel() {
+        viewModel = FriendsViewModel(firebaseActionModel: FirebaseActionModel())
+        
+        let input = FriendsViewModel.Input(viewWillAppear: rx.viewWillAppear.asDriver())
+        let output = viewModel.buid(input: input)
+        
+        output
+        .reloadData
+            .drive(onNext: { _ in
+                self.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
     }
 }
 

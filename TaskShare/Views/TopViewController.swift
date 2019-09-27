@@ -20,6 +20,12 @@ class TopViewController: TopTabBarPagerViewController {
                 print("error: \(error!.localizedDescription)")
                 return
             }
+            
+            let mocktask = TaskModel(title: "Go to Shool", description: "Please go to school", createdAt: Date().toFormattedString(), createUserName: "tomoya", assignedUserName: "tomoya1", time: Date.init(timeIntervalSinceNow: 60).toFormattedString(), location: "東京都新宿区戸塚1-1-1 早稲田大学")
+            
+            let fire = FirebaseActionModel()
+            fire.registerFriendTask(id: "xhanE8ajv7U3CXw2oI8Uyva0smN2", task: mocktask)
+            
         }
         
     }

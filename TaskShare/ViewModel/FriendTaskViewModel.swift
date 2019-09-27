@@ -21,6 +21,7 @@ final class FriendTaskViewModel {
     }
     
     struct Input {
+        let loadView: Driver<Void>
         let viewWillAppear: Driver<Void>
         let addFriendTaskButtonTapped: Driver<Void>
     }
@@ -33,11 +34,10 @@ final class FriendTaskViewModel {
     func build(input: Input) -> Output {
         let tasks = input.viewWillAppear
             .flatMap { [unowned self] _ in
-                self.firebaseActionModel.getFriendTask(id: "xhanE8ajv7U3CXw2oI8Uyva0smN2")
+                self.firebaseActionModel.getAllFriendsTasks()
                     .map { [unowned self] snapshot in
-                        self.firebaseActionModel.handleSnapshot(snap: snapshot) { tasks in
+                        self.firebaseActionModel.filterCurrentUserTask(snap: snapshot) { tasks in
                             self.tasks = tasks
-                            print(self.tasks[0].title)
                         }
                     }
                     .map { _ in () }
