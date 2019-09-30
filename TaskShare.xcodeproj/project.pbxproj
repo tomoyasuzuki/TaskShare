@@ -30,7 +30,7 @@
 		572BA26A233B2B6600388B52 /* MytTaskViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572BA269233B2B6600388B52 /* MytTaskViewModel.swift */; };
 		572BA26C233B2B7800388B52 /* FriendTaskViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572BA26B233B2B7800388B52 /* FriendTaskViewModel.swift */; };
 		572BA26E233B2B8A00388B52 /* FriendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572BA26D233B2B8A00388B52 /* FriendsViewModel.swift */; };
-		572BA270233B2B9600388B52 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572BA26F233B2B9600388B52 /* SearchViewModel.swift */; };
+		572BA270233B2B9600388B52 /* SearchFriendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572BA26F233B2B9600388B52 /* SearchFriendsViewModel.swift */; };
 		572BA273233B2ED700388B52 /* DefaultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572BA272233B2ED700388B52 /* DefaultTableViewCell.swift */; };
 		572BA276233B316C00388B52 /* TitleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572BA275233B316C00388B52 /* TitleLabel.swift */; };
 		572BA278233B317C00388B52 /* DescriptionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572BA277233B317B00388B52 /* DescriptionLabel.swift */; };
@@ -42,6 +42,7 @@
 		572BA28C233B588400388B52 /* Reactive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572BA28B233B588400388B52 /* Reactive.swift */; };
 		572BA28E233D9D1500388B52 /* CreateTaskViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572BA28D233D9D1400388B52 /* CreateTaskViewModel.swift */; };
 		572BA290233DA36600388B52 /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572BA28F233DA36600388B52 /* TextFieldTableViewCell.swift */; };
+		572BA294233E3E1A00388B52 /* CreateTaskTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572BA293233E3E1A00388B52 /* CreateTaskTableViewCell.swift */; };
 		8DA4BB85B5C12A60CE2938FF /* Pods_TaskShareUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B486303030C91045E67E643 /* Pods_TaskShareUITests.framework */; };
 /* End PBXBuildFile section */
 
@@ -92,7 +93,7 @@
 		572BA269233B2B6600388B52 /* MytTaskViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MytTaskViewModel.swift; sourceTree = "<group>"; };
 		572BA26B233B2B7800388B52 /* FriendTaskViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendTaskViewModel.swift; sourceTree = "<group>"; };
 		572BA26D233B2B8A00388B52 /* FriendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewModel.swift; sourceTree = "<group>"; };
-		572BA26F233B2B9600388B52 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		572BA26F233B2B9600388B52 /* SearchFriendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFriendsViewModel.swift; sourceTree = "<group>"; };
 		572BA272233B2ED700388B52 /* DefaultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTableViewCell.swift; sourceTree = "<group>"; };
 		572BA275233B316C00388B52 /* TitleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleLabel.swift; sourceTree = "<group>"; };
 		572BA277233B317B00388B52 /* DescriptionLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionLabel.swift; sourceTree = "<group>"; };
@@ -104,6 +105,7 @@
 		572BA28B233B588400388B52 /* Reactive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reactive.swift; sourceTree = "<group>"; };
 		572BA28D233D9D1400388B52 /* CreateTaskViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTaskViewModel.swift; sourceTree = "<group>"; };
 		572BA28F233DA36600388B52 /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
+		572BA293233E3E1A00388B52 /* CreateTaskTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTaskTableViewCell.swift; sourceTree = "<group>"; };
 		61A95FF2169E259897203FD3 /* Pods-TaskShareUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaskShareUITests.debug.xcconfig"; path = "Target Support Files/Pods-TaskShareUITests/Pods-TaskShareUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		6EC08EC9310545F727994A41 /* Pods-TaskShareUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaskShareUITests.release.xcconfig"; path = "Target Support Files/Pods-TaskShareUITests/Pods-TaskShareUITests.release.xcconfig"; sourceTree = "<group>"; };
 		78508597FF514A7446E317F4 /* Pods_TaskShareTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TaskShareTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -252,7 +254,7 @@
 				572BA269233B2B6600388B52 /* MytTaskViewModel.swift */,
 				572BA26B233B2B7800388B52 /* FriendTaskViewModel.swift */,
 				572BA26D233B2B8A00388B52 /* FriendsViewModel.swift */,
-				572BA26F233B2B9600388B52 /* SearchViewModel.swift */,
+				572BA26F233B2B9600388B52 /* SearchFriendsViewModel.swift */,
 				572BA28D233D9D1400388B52 /* CreateTaskViewModel.swift */,
 			);
 			path = ViewModel;
@@ -262,6 +264,7 @@
 			isa = PBXGroup;
 			children = (
 				572BA272233B2ED700388B52 /* DefaultTableViewCell.swift */,
+				572BA293233E3E1A00388B52 /* CreateTaskTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -555,10 +558,11 @@
 			files = (
 				572488882339F25500A9C24B /* TopViewController.swift in Sources */,
 				572488972339FBA600A9C24B /* FriendsViewController.swift in Sources */,
-				572BA270233B2B9600388B52 /* SearchViewModel.swift in Sources */,
+				572BA270233B2B9600388B52 /* SearchFriendsViewModel.swift in Sources */,
 				572488812339B9EA00A9C24B /* TestViewController.swift in Sources */,
 				572BA26C233B2B7800388B52 /* FriendTaskViewModel.swift in Sources */,
 				5724888B2339F27400A9C24B /* TaskModel.swift in Sources */,
+				572BA294233E3E1A00388B52 /* CreateTaskTableViewCell.swift in Sources */,
 				572BA290233DA36600388B52 /* TextFieldTableViewCell.swift in Sources */,
 				572BA284233B48EF00388B52 /* FireAuthError.swift in Sources */,
 				572BA28E233D9D1500388B52 /* CreateTaskViewModel.swift in Sources */,

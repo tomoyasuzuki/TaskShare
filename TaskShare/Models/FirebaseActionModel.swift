@@ -21,6 +21,7 @@ protocol FirebaseActionProtocol {
     func getFriendTask(id: String) -> Observable<QuerySnapshot>
     func getAllFriends() -> Observable<QuerySnapshot>
     func getAllFriendsTasks() -> Observable<QuerySnapshot>
+    func getAllUser() -> Observable<QuerySnapshot>
 }
 
 final class FirebaseActionModel: FirebaseActionProtocol {
@@ -342,6 +343,29 @@ final class FirebaseActionModel: FirebaseActionProtocol {
             return disposables
         }
     }
+    
+    func getAllUser() -> Observable<QuerySnapshot> {
+        return Observable.create { observer in
+            
+            let ref = self.db.collection("users")
+            
+            ref.addSnapshotListener { (snapshot, error) in
+                guard error == nil else {
+                    print(error!.localizedDescription)
+                    observer.onError(error!)
+                    return
+                }
+                
+                guard let snap = snapshot else {
+                    observer.onError(error!)
+                    return
+                }
+                
+                observer.onNext(snap)
+            }
+            return Disposables.create()
+        }
+    }
 }
 
 extension FirebaseActionModel {
@@ -378,7 +402,7 @@ extension FirebaseActionModel {
         snap.documentChanges.forEach { change in
             let data = change.document.data()
             
-            let id = data["friendUID"] as! String
+            let id = data["id"] as! String
             let name = data["name"] as! String
             print(name)
             

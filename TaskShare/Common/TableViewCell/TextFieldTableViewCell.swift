@@ -10,7 +10,7 @@ import UIKit
 
 class TextFieldTableViewCell: UITableViewCell {
     
-    private lazy var inputTextField: UITextField = {
+    lazy var inputTextField: UITextField = {
         let textField = UITextField()
         return textField
     }()
