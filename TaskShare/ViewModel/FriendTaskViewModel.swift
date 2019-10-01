@@ -36,7 +36,7 @@ final class FriendTaskViewModel {
             .flatMap { [unowned self] _ in
                 self.firebaseActionModel.getAllFriendsTasks()
                     .map { [unowned self] snapshot in
-                        self.firebaseActionModel.filterCurrentUserTask(snap: snapshot) { tasks in
+                        self.firebaseActionModel.handleTaskSnapshot(snap: snapshot) { tasks in
                             self.tasks = tasks
                         }
                     }

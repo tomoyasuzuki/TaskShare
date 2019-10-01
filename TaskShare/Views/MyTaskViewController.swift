@@ -105,7 +105,9 @@ extension MyTaskViewController {
         output
         .presentViewController
             .drive(onNext: { _ in
-                self.present(CreateTaskViewController(), animated: true, completion: nil)
+                let createVC = CreateTaskViewController()
+                let naviVC = UINavigationController(rootViewController: createVC)
+                self.present(naviVC, animated: true, completion: nil)
             })
         .disposed(by: disposeBag)
     }

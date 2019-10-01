@@ -36,7 +36,7 @@ final class MyTaskViewModel {
                 self.firebaseActionModel
                     .updateTask()
                     .map { [unowned self] snapshot in
-                        self.firebaseActionModel.handleSnapshot(snap: snapshot) { tasks in
+                        self.firebaseActionModel.handleTaskSnapshot(snap: snapshot) { tasks in
                             self.tasks = tasks
                         }
                     }

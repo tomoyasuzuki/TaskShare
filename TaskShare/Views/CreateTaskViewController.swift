@@ -25,13 +25,15 @@ class CreateTaskViewController: UIViewController {
     private var viewModel: CreateTaskViewModel!
     private let disposeBag = DisposeBag()
     
-    var titleTextSubject = BehaviorSubject<String>(value: "")
-    var descriptionTextSubject = BehaviorSubject<String>(value: "")
-    var timeTextSubject = BehaviorSubject<String>(value: "")
-    var locationTextSubject = BehaviorSubject<String>(value: "")
+    private var titleTextSubject = PublishSubject<String>()
+    private var descriptionTextSubject = PublishSubject<String>()
+    private var timeTextSubject = PublishSubject<String>()
+    private var locationTextSubject = PublishSubject<String>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = .white
         
         navigationItem.title = "Create MyTask"
         navigationController?.navigationBar.backgroundColor = UIColor.hex(string: "#4169e1", alpha: 1.0)
@@ -39,51 +41,83 @@ class CreateTaskViewController: UIViewController {
         let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
         
-        // Do any additional setup after loading the view.
-        view.backgroundColor = .orange
+        view.addSubview(tableView)
+        view.addSubview(createButton)
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: "CreateTaskTableViewCell")
+        createButton.setTitle("Create Task", for: .normal)
+        createButton.titleLabel?.textColor = .white
+        createButton.backgroundColor = .blue
+        createButton.layer.cornerRadius = 8.0
         
         configureViewModel()
         configureConstraints()
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
 }
 
 extension CreateTaskViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 4
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return 2
+            return "title"
+        case 1:
+            return "desc"
+        case 2:
+            return "time"
+        case 3:
+            return "loca"
         default:
-            return 1
+            return ""
         }
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CreateTaskTableViewCell", for: indexPath) as! TextFieldTableViewCell
-        cell.inputTextField.delegate = self
-        cell.inputTextField.tag = indexPath.row
+        cell.tag = indexPath.row
+        cell.delegate = self
         return cell
     }
 }
 
-extension CreateTaskViewController: UITextFieldDelegate {
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        guard let text = textField.text else { return }
-        
-        switch textField.tag {
+extension CreateTaskViewController: TextFieldTableViewCellDelegate {
+    func bindTextFieldText(cell: TextFieldTableViewCell, string: String) {
+        switch cell.tag {
         case 0:
-            titleTextSubject.onNext(text)
+            titleTextSubject.onNext(string)
         case 1:
-            descriptionTextSubject.onNext(text)
+            descriptionTextSubject.onNext(string)
         case 2:
-            timeTextSubject.onNext(text)
+            timeTextSubject.onNext(string)
         case 3:
-            locationTextSubject.onNext(text)
+            locationTextSubject.onNext(string)
         default:
-            return
+            break
         }
     }
 }
@@ -91,7 +125,15 @@ extension CreateTaskViewController: UITextFieldDelegate {
 extension CreateTaskViewController {
     func configureConstraints() {
         tableView.snp.makeConstraints { make in
-            make.edges.equalTo(view)
+            make.top.equalTo(view).offset(80)
+            make.left.right.bottom.equalTo(view)
+        }
+        
+        createButton.snp.makeConstraints { make in
+            make.width.equalTo(200)
+            make.height.equalTo(60)
+            make.bottom.equalTo(view).offset(-16)
+            make.centerX.equalTo(view)
         }
     }
     
@@ -99,8 +141,12 @@ extension CreateTaskViewController {
         viewModel = CreateTaskViewModel(firebaseActionModel: FirebaseActionModel())
         
         let input = CreateTaskViewModel
-            .Input(titleTextSubject: titleTextSubject.asDriver(onErrorDriveWith: Driver.empty()),
-                                              descriptionTextSubject: descriptionTextSubject.asDriver(onErrorDriveWith: Driver.empty()), timeTextSubject: timeTextSubject.asDriver(onErrorDriveWith: Driver.empty()), locationTextSubject: locationTextSubject.asDriver(onErrorDriveWith: Driver.empty()), createButtonTapped: createButton.rx.tap.asDriver())
+            .Input(titleTextSubject: titleTextSubject,
+                   descriptionTextSubject: descriptionTextSubject,
+                   timeTextSubject: timeTextSubject,
+                   locationTextSubject: locationTextSubject,
+                   createButtonTapped: createButton.rx.tap.asDriver())
+        
         let output = viewModel.build(input: input)
         
         

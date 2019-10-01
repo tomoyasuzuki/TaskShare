@@ -7,8 +7,16 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
-class TextFieldTableViewCell: UITableViewCell {
+protocol TextFieldTableViewCellDelegate {
+    func bindTextFieldText(cell: TextFieldTableViewCell, string: String) -> Void
+}
+
+class TextFieldTableViewCell: UITableViewCell, UITextFieldDelegate {
+    
+    var delegate: TextFieldTableViewCellDelegate? = nil
     
     lazy var inputTextField: UITextField = {
         let textField = UITextField()
@@ -19,6 +27,8 @@ class TextFieldTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         contentView.addSubview(inputTextField)
+        inputTextField.delegate = self
+        inputTextField.placeholder = "placeholder"
         
         configureConstraints()
     }
@@ -35,5 +45,12 @@ extension TextFieldTableViewCell {
             make.top.left.equalTo(contentView).offset(4)
             make.bottom.right.equalTo(contentView).offset(-4)
         }
+    }
+}
+
+extension TextFieldTableViewCell {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        guard let text = textField.text else { return }
+        delegate?.bindTextFieldText(cell: self, string: text)
     }
 }

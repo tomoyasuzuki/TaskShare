@@ -17,7 +17,6 @@ final class FriendsViewModel {
     
     init(firebaseActionModel: FirebaseActionModel) {
         self.firebaseActionModel = firebaseActionModel
-        friends.append(UserModel(id: "", name: "tomoya1"))
     }
     
     struct Input {
@@ -33,9 +32,9 @@ final class FriendsViewModel {
             .flatMap { _ in
                 self.firebaseActionModel.getAllFriends()
                     .map { snap in
-//                        self.firebaseActionModel.handleUserSnapshot(snap: snap) { users in
-//                            self.friends = users
-//                        }
+                        self.firebaseActionModel.handleUserSnapshot(snap: snap) { users in
+                            self.friends = users
+                        }
                         
                     }
                     .map { _ in () }
