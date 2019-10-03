@@ -12,6 +12,30 @@ import SnapKit
 import UIKit
 
 class CreateTaskViewController: UIViewController {
+    
+    private lazy var headerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.hex(string: "#4169e1", alpha: 1.0)
+        return view
+    }()
+    
+    private lazy var backButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "leftbackicon"), for: .normal)
+        button.tintColor = .white
+        button.backgroundColor = .clear
+        button.addTarget(self, action: #selector(dismissCreateTask), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var naviTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 20.0)
+        label.textColor = .white
+        label.text = "Create Task"
+        return label
+    }()
+    
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         return tableView
@@ -41,6 +65,9 @@ class CreateTaskViewController: UIViewController {
         let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
         
+        view.addSubview(headerView)
+        view.addSubview(backButton)
+        view.addSubview(naviTitleLabel)
         view.addSubview(tableView)
         view.addSubview(createButton)
         
@@ -57,16 +84,12 @@ class CreateTaskViewController: UIViewController {
         configureConstraints()
     }
     
-    override func resignFirstResponder() -> Bool {
-        self.view.resignFirstResponder()
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.endEditing(true)
-    }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    @objc func dismissCreateTask() {
+        self.dismiss(animated: true, completion: nil)
     }
 }
 
@@ -133,8 +156,24 @@ extension CreateTaskViewController: TextFieldTableViewCellDelegate {
 
 extension CreateTaskViewController {
     func configureConstraints() {
+        headerView.snp.makeConstraints { make in
+            make.top.left.right.equalTo(view)
+            make.height.equalTo(80)
+        }
+        
+        backButton.snp.makeConstraints { make in
+            make.left.equalTo(view)
+            make.centerY.equalTo(headerView)
+            make.height.width.equalTo(40)
+        }
+        
+        naviTitleLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(headerView)
+            make.centerX.equalTo(headerView)
+        }
+        
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(view).offset(60)
+            make.top.equalTo(headerView.snp.bottom)
             make.left.right.bottom.equalTo(view)
         }
         

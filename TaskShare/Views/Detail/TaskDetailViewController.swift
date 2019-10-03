@@ -53,7 +53,7 @@ class TaskDetailViewController: UIViewController {
 extension TaskDetailViewController {
     func configureConstraints() {
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(view).offset(70)
+            make.top.equalTo(view).offset(100)
             make.left.equalTo(view).offset(50)
         }
         

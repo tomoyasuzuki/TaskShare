@@ -53,4 +53,9 @@ extension TextFieldTableViewCell {
         guard let text = textField.text else { return }
         delegate?.bindTextFieldText(cell: self, string: text)
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        inputTextField.resignFirstResponder()
+        return true
+    }
 }

@@ -13,7 +13,6 @@
 		570A0C2E234437BF00FD2461 /* TaskDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570A0C2D234437BF00FD2461 /* TaskDetailViewController.swift */; };
 		570A0C3023443B2000FD2461 /* MyTaskDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570A0C2F23443B2000FD2461 /* MyTaskDetailViewController.swift */; };
 		570A0C3223443B6100FD2461 /* MyTaskViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570A0C3123443B6100FD2461 /* MyTaskViewModel.swift */; };
-		570A0C342345A0B700FD2461 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570A0C332345A0B700FD2461 /* HeaderView.swift */; };
 		570A0C362345AFF700FD2461 /* ButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570A0C352345AFF700FD2461 /* ButtonTableViewCell.swift */; };
 		5724884E23390EEF00A9C24B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5724884D23390EEF00A9C24B /* AppDelegate.swift */; };
 		5724885523390EEF00A9C24B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5724885323390EEF00A9C24B /* Main.storyboard */; };
@@ -75,7 +74,6 @@
 		570A0C2D234437BF00FD2461 /* TaskDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailViewController.swift; sourceTree = "<group>"; };
 		570A0C2F23443B2000FD2461 /* MyTaskDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTaskDetailViewController.swift; sourceTree = "<group>"; };
 		570A0C3123443B6100FD2461 /* MyTaskViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTaskViewModel.swift; sourceTree = "<group>"; };
-		570A0C332345A0B700FD2461 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		570A0C352345AFF700FD2461 /* ButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonTableViewCell.swift; sourceTree = "<group>"; };
 		5724884A23390EEF00A9C24B /* TaskShare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaskShare.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5724884D23390EEF00A9C24B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -337,7 +335,6 @@
 				572BA28F233DA36600388B52 /* TextFieldTableViewCell.swift */,
 				570A0C352345AFF700FD2461 /* ButtonTableViewCell.swift */,
 				570A0C29234329C900FD2461 /* StringKey.swift */,
-				570A0C332345A0B700FD2461 /* HeaderView.swift */,
 			);
 			path = TableViewCell;
 			sourceTree = "<group>";
@@ -603,7 +600,6 @@
 				572BA27F233B410A00388B52 /* FirebaseActionModel.swift in Sources */,
 				572488952339FB9100A9C24B /* FriendTaskViewController.swift in Sources */,
 				5724888D2339F27C00A9C24B /* UserModel.swift in Sources */,
-				570A0C342345A0B700FD2461 /* HeaderView.swift in Sources */,
 				572BA286233B4ABC00388B52 /* FireDefaultError.swift in Sources */,
 				572BA26A233B2B6600388B52 /* MytTaskViewModel.swift in Sources */,
 				572488912339FA5400A9C24B /* TopTabBarPagerViewController.swift in Sources */,
