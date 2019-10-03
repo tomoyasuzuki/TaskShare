@@ -14,7 +14,7 @@ final class StringKey {
     static let name = "name"
     static let id = "id"
     static let users = "users"
-    static let friends = "friendsKey"
+    static let friends = "friends"
     static let tasks = "tasks"
     static let title = "title"
     static let description = "description"

@@ -32,18 +32,19 @@ final class MyTaskViewModel {
     
     func build(input: Input) -> Output {        
         let tasks = input.viewWillAppear
+            .asObservable()
             .flatMap { [unowned self] _ in
-                self.firebaseActionModel
-                    .updateTask()
-                    .map { [unowned self] snapshot in
-                        self.firebaseActionModel.handleTaskSnapshot(snap: snapshot) { tasks in
-                            self.tasks = tasks
-                        }
-                    }
-                    .map { _ in () }
-                    .asDriver(onErrorDriveWith: Driver.empty())
+                self.firebaseActionModel.updateTask()
             }
+            .map { [unowned self] snapshot in
+                self.firebaseActionModel.handleTaskSnapshot(snap: snapshot) { tasks in
+                    self.tasks = tasks
+                }
+            }
+            .map { _ in () }
+            .asDriver(onErrorDriveWith: Driver.empty())
         
-        return Output(presentViewController: input.addMyTaskButtonTapped, reloadData: tasks)
+        return Output(presentViewController: input.addMyTaskButtonTapped,
+                      reloadData: tasks.asDriver(onErrorDriveWith: Driver.empty()))
     }
 }

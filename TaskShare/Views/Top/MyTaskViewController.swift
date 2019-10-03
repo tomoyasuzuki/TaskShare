@@ -57,6 +57,12 @@ extension MyTaskViewController: UITableViewDelegate, UITableViewDataSource {
         return viewModel.tasks.count
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let task = viewModel.tasks[indexPath.row]
+        let vc = MyTaskDetailViewController(task: task)
+        self.present(vc, animated: true, completion: nil)
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "myTaskTableViewCell", for: indexPath) as! DefaultTableViewCell
         cell.build(task: viewModel.tasks[indexPath.row])

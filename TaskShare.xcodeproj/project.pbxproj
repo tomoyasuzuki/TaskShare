@@ -10,6 +10,11 @@
 		1BA509B10E2016588BC61841 /* Pods_TaskShareTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78508597FF514A7446E317F4 /* Pods_TaskShareTests.framework */; };
 		4D0CBE0E225EF1067586EE20 /* Pods_TaskShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B03D860B039A92485F3F1262 /* Pods_TaskShare.framework */; };
 		570A0C2A234329C900FD2461 /* StringKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570A0C29234329C900FD2461 /* StringKey.swift */; };
+		570A0C2E234437BF00FD2461 /* TaskDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570A0C2D234437BF00FD2461 /* TaskDetailViewController.swift */; };
+		570A0C3023443B2000FD2461 /* MyTaskDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570A0C2F23443B2000FD2461 /* MyTaskDetailViewController.swift */; };
+		570A0C3223443B6100FD2461 /* MyTaskViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570A0C3123443B6100FD2461 /* MyTaskViewModel.swift */; };
+		570A0C342345A0B700FD2461 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570A0C332345A0B700FD2461 /* HeaderView.swift */; };
+		570A0C362345AFF700FD2461 /* ButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570A0C352345AFF700FD2461 /* ButtonTableViewCell.swift */; };
 		5724884E23390EEF00A9C24B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5724884D23390EEF00A9C24B /* AppDelegate.swift */; };
 		5724885523390EEF00A9C24B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5724885323390EEF00A9C24B /* Main.storyboard */; };
 		5724885723390EF500A9C24B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5724885623390EF500A9C24B /* Assets.xcassets */; };
@@ -67,6 +72,11 @@
 		21F0B60778589FFC7AC08EB2 /* Pods-TaskShare.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaskShare.release.xcconfig"; path = "Target Support Files/Pods-TaskShare/Pods-TaskShare.release.xcconfig"; sourceTree = "<group>"; };
 		3D7E4B7ED01E919BC0AFFE87 /* Pods-TaskShareTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaskShareTests.release.xcconfig"; path = "Target Support Files/Pods-TaskShareTests/Pods-TaskShareTests.release.xcconfig"; sourceTree = "<group>"; };
 		570A0C29234329C900FD2461 /* StringKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringKey.swift; sourceTree = "<group>"; };
+		570A0C2D234437BF00FD2461 /* TaskDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailViewController.swift; sourceTree = "<group>"; };
+		570A0C2F23443B2000FD2461 /* MyTaskDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTaskDetailViewController.swift; sourceTree = "<group>"; };
+		570A0C3123443B6100FD2461 /* MyTaskViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTaskViewModel.swift; sourceTree = "<group>"; };
+		570A0C332345A0B700FD2461 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		570A0C352345AFF700FD2461 /* ButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonTableViewCell.swift; sourceTree = "<group>"; };
 		5724884A23390EEF00A9C24B /* TaskShare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaskShare.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5724884D23390EEF00A9C24B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5724885123390EEF00A9C24B /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
@@ -143,6 +153,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		570A0C2B2344373E00FD2461 /* Top */ = {
+			isa = PBXGroup;
+			children = (
+				572488872339F25500A9C24B /* TopViewController.swift */,
+				572488902339FA5400A9C24B /* TopTabBarPagerViewController.swift */,
+				572488922339FB8000A9C24B /* MyTaskViewController.swift */,
+				572488942339FB9100A9C24B /* FriendTaskViewController.swift */,
+				572488962339FBA600A9C24B /* FriendsViewController.swift */,
+				572488982339FBB700A9C24B /* SearchFriendsViewController.swift */,
+			);
+			path = Top;
+			sourceTree = "<group>";
+		};
+		570A0C2C2344376400FD2461 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				570A0C2D234437BF00FD2461 /* TaskDetailViewController.swift */,
+				570A0C2F23443B2000FD2461 /* MyTaskDetailViewController.swift */,
+				570A0C3123443B6100FD2461 /* MyTaskViewModel.swift */,
+				572BA289233B52E900388B52 /* CreateTaskViewController.swift */,
+			);
+			path = Detail;
+			sourceTree = "<group>";
+		};
 		5724884123390EEF00A9C24B = {
 			isa = PBXGroup;
 			children = (
@@ -225,14 +259,9 @@
 		5724888F2339F38500A9C24B /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				570A0C2B2344373E00FD2461 /* Top */,
+				570A0C2C2344376400FD2461 /* Detail */,
 				572BA271233B2EB300388B52 /* Cells */,
-				572488872339F25500A9C24B /* TopViewController.swift */,
-				572488902339FA5400A9C24B /* TopTabBarPagerViewController.swift */,
-				572488922339FB8000A9C24B /* MyTaskViewController.swift */,
-				572488942339FB9100A9C24B /* FriendTaskViewController.swift */,
-				572488962339FBA600A9C24B /* FriendsViewController.swift */,
-				572488982339FBB700A9C24B /* SearchFriendsViewController.swift */,
-				572BA289233B52E900388B52 /* CreateTaskViewController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -306,7 +335,9 @@
 			isa = PBXGroup;
 			children = (
 				572BA28F233DA36600388B52 /* TextFieldTableViewCell.swift */,
+				570A0C352345AFF700FD2461 /* ButtonTableViewCell.swift */,
 				570A0C29234329C900FD2461 /* StringKey.swift */,
+				570A0C332345A0B700FD2461 /* HeaderView.swift */,
 			);
 			path = TableViewCell;
 			sourceTree = "<group>";
@@ -560,6 +591,7 @@
 				572488972339FBA600A9C24B /* FriendsViewController.swift in Sources */,
 				572BA270233B2B9600388B52 /* SearchFriendsViewModel.swift in Sources */,
 				572488812339B9EA00A9C24B /* TestViewController.swift in Sources */,
+				570A0C3023443B2000FD2461 /* MyTaskDetailViewController.swift in Sources */,
 				572BA26C233B2B7800388B52 /* FriendTaskViewModel.swift in Sources */,
 				5724888B2339F27400A9C24B /* TaskModel.swift in Sources */,
 				572BA290233DA36600388B52 /* TextFieldTableViewCell.swift in Sources */,
@@ -567,12 +599,15 @@
 				572BA28E233D9D1500388B52 /* CreateTaskViewModel.swift in Sources */,
 				572BA268233B2B5400388B52 /* TopViewModel.swift in Sources */,
 				572BA273233B2ED700388B52 /* DefaultTableViewCell.swift in Sources */,
+				570A0C362345AFF700FD2461 /* ButtonTableViewCell.swift in Sources */,
 				572BA27F233B410A00388B52 /* FirebaseActionModel.swift in Sources */,
 				572488952339FB9100A9C24B /* FriendTaskViewController.swift in Sources */,
 				5724888D2339F27C00A9C24B /* UserModel.swift in Sources */,
+				570A0C342345A0B700FD2461 /* HeaderView.swift in Sources */,
 				572BA286233B4ABC00388B52 /* FireDefaultError.swift in Sources */,
 				572BA26A233B2B6600388B52 /* MytTaskViewModel.swift in Sources */,
 				572488912339FA5400A9C24B /* TopTabBarPagerViewController.swift in Sources */,
+				570A0C3223443B6100FD2461 /* MyTaskViewModel.swift in Sources */,
 				5724889C233A04DF00A9C24B /* UIColor.swift in Sources */,
 				572BA278233B317C00388B52 /* DescriptionLabel.swift in Sources */,
 				572BA26E233B2B8A00388B52 /* FriendsViewModel.swift in Sources */,
@@ -580,6 +615,7 @@
 				572BA281233B440900388B52 /* Date.swift in Sources */,
 				572BA28C233B588400388B52 /* Reactive.swift in Sources */,
 				572488932339FB8000A9C24B /* MyTaskViewController.swift in Sources */,
+				570A0C2E234437BF00FD2461 /* TaskDetailViewController.swift in Sources */,
 				572BA276233B316C00388B52 /* TitleLabel.swift in Sources */,
 				572488992339FBB700A9C24B /* SearchFriendsViewController.swift in Sources */,
 				5724884E23390EEF00A9C24B /* AppDelegate.swift in Sources */,

@@ -29,17 +29,17 @@ final class FriendsViewModel {
     
     func buid(input: Input) -> Output {
         let friends = input.viewWillAppear
+            .asObservable()
             .flatMap { _ in
                 self.firebaseActionModel.getAllFriends()
-                    .map { snap in
-                        self.firebaseActionModel.handleUserSnapshot(snap: snap) { users in
-                            self.friends = users
-                        }
-                        
-                    }
-                    .map { _ in () }
-                    .asDriver(onErrorDriveWith: Driver.empty())
             }
+            .map { snap in
+                self.firebaseActionModel.handleUserSnapshot(snap: snap) { users in
+                    self.friends = users
+                }
+            }
+            .map { _ in () }
+            .asDriver(onErrorDriveWith: Driver.empty())
         
         return Output(reloadData: friends)
     }

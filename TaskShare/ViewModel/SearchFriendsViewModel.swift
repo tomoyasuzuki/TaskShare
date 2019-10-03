@@ -14,16 +14,20 @@ import RxCocoa
 final class SearchFriendsViewModel {
     let firebaseActionModel: FirebaseActionModel!
     
-    private let currentUser = Auth.auth().currentUser
+    private var text: String = ""
     
-    var allUser = [UserModel]()
+    var users = [UserModel]()
+    
+    private let disposeBag = DisposeBag()
     
     init(firebaseActionModel: FirebaseActionModel) {
         self.firebaseActionModel = firebaseActionModel
     }
     
     struct Input {
-        let viewWillAppear: Driver<Void>
+        let searchText: Observable<String>
+        let searchButtonTapped: Driver<Void>
+        let cellButtonTapped: PublishRelay<Int>
     }
     
     struct Output {
@@ -31,32 +35,33 @@ final class SearchFriendsViewModel {
     }
     
     func bulid(input: Input) -> Output {
-        let allUser = input.viewWillAppear
-            .flatMap { _ in
-                self.firebaseActionModel.getAllUser()
-                    .map { snap in
-                        self.firebaseActionModel.handleUserSnapshot(snap: snap) { users in
-                            self.allUser = users
-                            
-                            var index = 0
-                            
-                            self.allUser.forEach { [unowned self] user in
-                                guard let currentUser = self.currentUser else {
-                                    return
-                                }
-                                
-                                if user.id == currentUser.uid {
-                                    self.allUser.remove(at: index)
-                                }
-                                
-                                index = index + 1
-                            }
-                        }
-                    }
-                    .map { _ in () }
-                    .asDriver(onErrorDriveWith: Driver.empty())
-            }
         
-        return Output(reloadData: allUser)
+        input.cellButtonTapped
+            .asObservable()
+            .subscribe(onNext: { [unowned self] cell in
+                let id = self.users[cell].id
+                let name = self.users[cell].name
+                
+                self.firebaseActionModel.registerFriend(id: id, name: name)
+            })
+            .disposed(by: disposeBag)
+        
+        input.searchText
+            .subscribe(onNext: { text in
+                self.text = text
+            })
+            .disposed(by: disposeBag)
+        
+        let result = input.searchButtonTapped
+            .asObservable()
+            .flatMap {[unowned self] _ in self.firebaseActionModel.searchUser(text: self.text)}
+            .map {[unowned self] snap in
+                self.firebaseActionModel.handleUserSnapshot(snap: snap) { users in
+                    self.users = users
+                }}
+            .map { _ in ()}
+            .asDriver(onErrorDriveWith: Driver.empty())
+            
+        return Output(reloadData: result)
     }
 }

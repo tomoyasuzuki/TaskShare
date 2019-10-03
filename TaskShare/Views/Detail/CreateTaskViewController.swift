@@ -25,10 +25,10 @@ class CreateTaskViewController: UIViewController {
     private var viewModel: CreateTaskViewModel!
     private let disposeBag = DisposeBag()
     
-    private var titleTextSubject = PublishSubject<String>()
-    private var descriptionTextSubject = PublishSubject<String>()
-    private var timeTextSubject = PublishSubject<String>()
-    private var locationTextSubject = PublishSubject<String>()
+    private var titleText = BehaviorRelay<String>(value: "")
+    private var descriptionText = BehaviorRelay<String>(value: "")
+    private var timeText = BehaviorRelay<String>(value: "")
+    private var locationText = BehaviorRelay<String>(value: "")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +47,7 @@ class CreateTaskViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(TextFieldTableViewCell.self, forCellReuseIdentifier: "CreateTaskTableViewCell")
+        
         createButton.setTitle("Create Task", for: .normal)
         createButton.titleLabel?.textColor = .white
         createButton.backgroundColor = .blue
@@ -54,6 +55,10 @@ class CreateTaskViewController: UIViewController {
         
         configureViewModel()
         configureConstraints()
+    }
+    
+    override func resignFirstResponder() -> Bool {
+        self.view.resignFirstResponder()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -81,13 +86,13 @@ extension CreateTaskViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return "title"
+            return "Title"
         case 1:
-            return "desc"
+            return "Description"
         case 2:
-            return "time"
+            return "Time"
         case 3:
-            return "loca"
+            return "Location"
         default:
             return ""
         }
@@ -99,9 +104,13 @@ extension CreateTaskViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CreateTaskTableViewCell", for: indexPath) as! TextFieldTableViewCell
-        cell.tag = indexPath.row
+        cell.tag = indexPath.section
         cell.delegate = self
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0
     }
 }
 
@@ -109,13 +118,13 @@ extension CreateTaskViewController: TextFieldTableViewCellDelegate {
     func bindTextFieldText(cell: TextFieldTableViewCell, string: String) {
         switch cell.tag {
         case 0:
-            titleTextSubject.onNext(string)
+            titleText.accept(string)
         case 1:
-            descriptionTextSubject.onNext(string)
+            descriptionText.accept(string)
         case 2:
-            timeTextSubject.onNext(string)
+            timeText.accept(string)
         case 3:
-            locationTextSubject.onNext(string)
+            locationText.accept(string)
         default:
             break
         }
@@ -125,7 +134,7 @@ extension CreateTaskViewController: TextFieldTableViewCellDelegate {
 extension CreateTaskViewController {
     func configureConstraints() {
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(view).offset(80)
+            make.top.equalTo(view).offset(60)
             make.left.right.bottom.equalTo(view)
         }
         
@@ -139,12 +148,13 @@ extension CreateTaskViewController {
     
     func configureViewModel() {
         viewModel = CreateTaskViewModel(firebaseActionModel: FirebaseActionModel())
-        
+     
         let input = CreateTaskViewModel
-            .Input(titleTextSubject: titleTextSubject,
-                   descriptionTextSubject: descriptionTextSubject,
-                   timeTextSubject: timeTextSubject,
-                   locationTextSubject: locationTextSubject,
+            .Input(viewWillAppear: rx.viewWillAppear.asDriver(),
+                   titleText: titleText,
+                   descriptionText: descriptionText,
+                   timeText: timeText,
+                   locationText: locationText,
                    createButtonTapped: createButton.rx.tap.asDriver())
         
         let output = viewModel.build(input: input)

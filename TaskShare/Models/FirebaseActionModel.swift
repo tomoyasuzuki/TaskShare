@@ -12,9 +12,10 @@ import RxSwift
 
 protocol FirebaseActionProtocol {
     func login(email: String, password: String) -> Observable<Void>
+    func searchUser(text: String) -> Observable<QuerySnapshot>
     func registerUser(name: String) -> Observable<Void>
-    func registerFriend(id: String) -> Observable<Void>
-    func registerTask(task: TaskModel) -> Observable<Void>
+    func registerFriend(id: String, name: String) -> Void
+    func registerTask(task: TaskModel) -> Void
     func registerFriendTask(id: String, task: TaskModel) -> Observable<Void>
     func updateTask() -> Observable<QuerySnapshot>
     func getAllMyTasks() -> Observable<QuerySnapshot>
@@ -25,7 +26,6 @@ protocol FirebaseActionProtocol {
 }
 
 final class FirebaseActionModel: FirebaseActionProtocol {
-    
     // MARK: Property
     
     private let db = Firestore.firestore()
@@ -44,6 +44,31 @@ final class FirebaseActionModel: FirebaseActionProtocol {
                 
                 observer.onNext(())
             }
+            return Disposables.create()
+        }
+    }
+    
+    func searchUser(text: String) -> Observable<QuerySnapshot> {
+        return Observable.create { observer in
+            self.db
+                .collection(StringKey.users)
+                .whereField(StringKey.name, isEqualTo: text)
+                .addSnapshotListener { snapshot, error in
+                    guard error == nil else {
+                        print(error!.localizedDescription)
+                        observer.onError(error!)
+                        return
+                    }
+                    
+                    guard let snapshot = snapshot else {
+                        observer.onError(error!)
+                        return
+                    }
+                    
+                    observer.onNext(snapshot)
+                    print("sent snap")
+                }
+            
             return Disposables.create()
         }
     }
@@ -75,83 +100,65 @@ final class FirebaseActionModel: FirebaseActionProtocol {
         }
     }
     
-    func registerFriend(id: String) -> Observable<Void> {
-        return Observable.create { [unowned self] observer in
-            let disposables = Disposables.create()
-            
-            guard let user = self.user else {
-                observer.onError(FireDefaultError.unexpected)
-                return disposables
-            }
-            
-            let ref = self.db
-                .collection(StringKey.users)
-                .document(user.uid)
-                .collection(StringKey.friends)
-            
-            ref.document(id)
-                .setData([StringKey.id: id]) { error in
-                    guard error == nil else {
-                        print(error!.localizedDescription)
-                        observer.onError(error!)
-                        return
-                    }
-                    
-                    observer.onNext(())
-                }
-            
-            return Disposables.create()
+    func registerFriend(id: String, name: String) {
+        guard let user = self.user else {
+            return
         }
-    }
-    
-    func registerTask(task: TaskModel) -> Observable<Void> {
-        return Observable.create { [unowned self] observer in
-            let disposables = Disposables.create()
-            
-            guard let user = self.user else {
-                observer.onError(FireAuthError.unexpected)
-                return disposables
-            }
-            
-            let userRef = self.db
-                .collection(StringKey.friends)
-                .document(user.uid)
-                .collection(StringKey.tasks)
-            
-            let taskRef = self.db
-                .collection(StringKey.tasks)
-            
-            userRef.addDocument(data: [StringKey.title: task.title,
-                                       StringKey.description: task.description,
-                                       StringKey.createdAt: task.createdAt,
-                                       StringKey.createUserName: "tomoya",
-                                       StringKey.assignedUserName: "tomoya",
-                                       StringKey.time: task.time,
-                                       StringKey.location: task.location]) { error in
+        
+        guard id != user.uid else { return }
+        
+        let ref = self.db
+            .collection(StringKey.users)
+            .document(user.uid)
+            .collection(StringKey.friends)
+        
+        ref.document(id)
+            .setData([StringKey.id: id, StringKey.name: name]) { error in
                 guard error == nil else {
                     print(error!.localizedDescription)
-                    return observer.onError(error!)
-                }
-                
-                taskRef.addDocument(data: [StringKey.title: task.title,
-                                           StringKey.description: task.description,
-                                           StringKey.createdAt: task.createdAt,
-                                           StringKey.time: task.time,
-                                           StringKey.location: task.location,
-                                           StringKey.assignedUserRef: self.db.collection(StringKey.users).document(user.uid),
-                                           StringKey.createUserRef: self.db.collection(StringKey.users).document(user.uid)]) { error in
-                    
-                    guard error == nil else {
-                        print(error!.localizedDescription)
-                        observer.onError(error!)
-                        return
-                    }
-                    
-                    observer.onNext(())
+                    return
                 }
             }
+    }
+    
+    func registerTask(task: TaskModel) {
+        guard let user = self.user else {
+            return
+        }
+        
+        let userRef = self.db
+            .collection(StringKey.users)
+            .document(user.uid)
+            .collection(StringKey.tasks)
+        
+        let taskRef = self.db
+            .collection(StringKey.tasks)
+        
+        userRef.addDocument(data: [StringKey.title: task.title,
+                                   StringKey.description: task.description,
+                                   StringKey.createdAt: task.createdAt,
+                                   StringKey.createUserName: task.createUserName,
+                                   StringKey.assignedUserName: task.assignedUserName,
+                                   StringKey.time: task.time,
+                                   StringKey.location: task.location]) { error in
+            guard error == nil else {
+                print(error!.localizedDescription)
+                return
+            }
             
-            return Disposables.create()
+            taskRef.addDocument(data: [StringKey.title: task.title,
+                                       StringKey.description: task.description,
+                                       StringKey.createdAt: task.createdAt,
+                                       StringKey.time: task.time,
+                                       StringKey.location: task.location,
+                                       StringKey.assignedUserRef: self.db.collection(StringKey.users).document(user.uid),
+                                       StringKey.createUserRef: self.db.collection(StringKey.users).document(user.uid)]) { error in
+                
+                guard error == nil else {
+                    print(error!.localizedDescription)
+                    return
+                }
+            }
         }
     }
     
@@ -308,7 +315,7 @@ final class FirebaseActionModel: FirebaseActionProtocol {
             taskRef
                 .whereField(StringKey.createUserRef,
                             isEqualTo: self.db.collection(StringKey.users)
-                .document(user.uid))
+                                .document(user.uid))
                 .addSnapshotListener { snapshot, error in
                     guard error == nil else {
                         print(error!.localizedDescription)
@@ -361,7 +368,8 @@ final class FirebaseActionModel: FirebaseActionProtocol {
                 return disposables
             }
             
-            let ref = self.db.collection(StringKey.users)
+            let ref = self.db
+                .collection(StringKey.users)
                 .document(user.uid)
                 .collection(StringKey.tasks)
             
@@ -376,7 +384,6 @@ final class FirebaseActionModel: FirebaseActionProtocol {
                     observer.onError(error!)
                     return
                 }
-                
                 observer.onNext(snapshot)
             }
             
@@ -386,7 +393,6 @@ final class FirebaseActionModel: FirebaseActionProtocol {
 }
 
 extension FirebaseActionModel {
-    
     // MARK: Snapshot Handler
     
     func handleTaskSnapshot(snap: QuerySnapshot, complition: @escaping ([TaskModel]) -> Void) {
@@ -430,6 +436,8 @@ extension FirebaseActionModel {
         let assignedUserName = data[StringKey.assignedUserName] as? String ?? ""
         let time = data[StringKey.time] as? String ?? ""
         let location = data[StringKey.location] as? String ?? ""
+        
+        print("created task model")
         
         return TaskModel(title: title,
                          description: description,
