@@ -15,7 +15,7 @@ protocol FirebaseActionProtocol {
     func searchUser(text: String) -> Observable<QuerySnapshot>
     func registerUser(name: String) -> Observable<Void>
     func registerFriend(id: String, name: String) -> Void
-    func registerTask(task: TaskModel) -> Void
+    func registerTask(task: TaskModel) -> Observable<Void>
     func registerFriendTask(id: String, task: TaskModel) -> Observable<Void>
     func updateTask() -> Observable<QuerySnapshot>
     func getAllMyTasks() -> Observable<QuerySnapshot>
@@ -121,44 +121,52 @@ final class FirebaseActionModel: FirebaseActionProtocol {
             }
     }
     
-    func registerTask(task: TaskModel) {
-        guard let user = self.user else {
-            return
-        }
-        
-        let userRef = self.db
-            .collection(StringKey.users)
-            .document(user.uid)
-            .collection(StringKey.tasks)
-        
-        let taskRef = self.db
-            .collection(StringKey.tasks)
-        
-        userRef.addDocument(data: [StringKey.title: task.title,
-                                   StringKey.description: task.description,
-                                   StringKey.createdAt: task.createdAt,
-                                   StringKey.createUserName: task.createUserName,
-                                   StringKey.assignedUserName: task.assignedUserName,
-                                   StringKey.time: task.time,
-                                   StringKey.location: task.location]) { error in
-            guard error == nil else {
-                print(error!.localizedDescription)
-                return
+    func registerTask(task: TaskModel) -> Observable<Void> {
+        return Observable.create { observer  in
+            let disposables = Disposables.create()
+            
+            guard let user = self.user else {
+                observer.onError(FireAuthError.unexpected)
+                return disposables
             }
             
-            taskRef.addDocument(data: [StringKey.title: task.title,
+            let userRef = self.db
+                .collection(StringKey.users)
+                .document(user.uid)
+                .collection(StringKey.tasks)
+            
+            let taskRef = self.db
+                .collection(StringKey.tasks)
+            
+            userRef.addDocument(data: [StringKey.title: task.title,
                                        StringKey.description: task.description,
                                        StringKey.createdAt: task.createdAt,
+                                       StringKey.createUserName: task.createUserName,
+                                       StringKey.assignedUserName: task.assignedUserName,
                                        StringKey.time: task.time,
-                                       StringKey.location: task.location,
-                                       StringKey.assignedUserRef: self.db.collection(StringKey.users).document(user.uid),
-                                       StringKey.createUserRef: self.db.collection(StringKey.users).document(user.uid)]) { error in
-                
+                                       StringKey.location: task.location]) { error in
                 guard error == nil else {
                     print(error!.localizedDescription)
+                    observer.onError(error!)
                     return
                 }
+                
+                taskRef.addDocument(data: [StringKey.title: task.title,
+                                           StringKey.description: task.description,
+                                           StringKey.createdAt: task.createdAt,
+                                           StringKey.time: task.time,
+                                           StringKey.location: task.location,
+                                           StringKey.assignedUserRef: self.db.collection(StringKey.users).document(user.uid),
+                                           StringKey.createUserRef: self.db.collection(StringKey.users).document(user.uid)]) { error in
+                    
+                    guard error == nil else {
+                        print(error!.localizedDescription)
+                        observer.onError(error!)
+                        return
+                    }
+                }
             }
+            return disposables
         }
     }
     
@@ -404,6 +412,17 @@ extension FirebaseActionModel {
         }
         
         complition(tasks)
+    }
+    
+    func handleFriendTaskSnapshot(snap: QuerySnapshot, complition: @escaping ([TaskModel]) -> Void) {
+        var tasks = [TaskModel]()
+        
+        snap.documentChanges.forEach { change in
+            let task = createTaskModel(change: change)
+            tasks.append(task)
+        }
+        
+        complition(tasks.filter { $0.assignedUserName == user?.displayName })
     }
     
     func handleUserSnapshot(snap: QuerySnapshot, complition: @escaping ([UserModel]) -> Void) {

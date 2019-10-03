@@ -34,8 +34,8 @@ final class FriendsViewModel {
                 self.firebaseActionModel.getAllFriends()
             }
             .map { snap in
-                self.firebaseActionModel.handleUserSnapshot(snap: snap) { users in
-                    self.friends = users
+                self.firebaseActionModel.handleUserSnapshot(snap: snap) { friends in
+                    self.friends = friends
                 }
             }
             .map { _ in () }

@@ -58,28 +58,24 @@ final class CreateTaskViewModel {
         
         input.titleText
             .subscribe(onNext: { title in
-                print("title")
                 self.titleText = title
             })
             .disposed(by: disposeBag)
         
         input.descriptionText
             .subscribe(onNext: { description in
-                print("description")
                 self.descriptionText = description
             })
             .disposed(by: disposeBag)
         
         input.timeText
             .subscribe(onNext: { time in
-                print("time")
                 self.timeText = time
             })
             .disposed(by: disposeBag)
         
         input.locationText
             .subscribe(onNext: { location in
-                print("location")
                 self.locationText = location
             })
             .disposed(by: disposeBag)
@@ -95,7 +91,9 @@ final class CreateTaskViewModel {
                           time: self.timeText,
                           location: self.locationText)
             }
-            .flatMap { [unowned self] task in return self.firebaseActionModel.registerTask(task: task) }
+            .flatMap { [unowned self] task in
+                self.firebaseActionModel.registerTask(task: task)
+            }
             .map { _ in () }
             .asDriver(onErrorDriveWith: Driver.empty())
         
