@@ -62,7 +62,7 @@ final class DefaultTableViewCell: UITableViewCell {
 
 extension DefaultTableViewCell {
     func build(task: TaskModel) {
-        titleLabel.text = task.title
+        titleLabel.text = "Title: " + task.title
     
         createUserTitleLabel.text = "Creater:"
         assignedUserTitleLabel.text = "Assignee:"
@@ -70,8 +70,8 @@ extension DefaultTableViewCell {
         createUserDescriptionLabel.text = task.createUserName
         assignedUserDescriptionLabel.text = task.assignedUserName
         
-        timeLabel.text = task.time
-        locationLabel.text = task.location
+        timeLabel.text = "Time:" + task.time
+        locationLabel.text = "Location:" + task.location
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  MyTaskViewController.swift
+//  FriendTaskViewController.swift
 //  TaskShare
 //
 //  Created by 鈴木友也 on 2019/09/24.
@@ -7,12 +7,11 @@
 //
 
 import UIKit
-import SnapKit
 import XLPagerTabStrip
 import RxSwift
 import RxCocoa
 
-class MyTaskViewController: UIViewController {
+class FriendTaskViewController: UIViewController {
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -20,7 +19,7 @@ class MyTaskViewController: UIViewController {
         return tableView
     }()
     
-    private lazy var addMyTaskButton: UIButton = {
+    private lazy var addFriendTaskButton: UIButton = {
         let button = UIButton()
         
         button.backgroundColor = UIColor.hex(string: "#4169e1", alpha: 1.0)
@@ -30,20 +29,19 @@ class MyTaskViewController: UIViewController {
         return button
     }()
     
-    private var viewModel: MyTaskViewModel!
+    private var viewModel: FriendTaskViewModel!
     private let disposeBag = DisposeBag()
-    
-    let mocktask = TaskModel(title: "Go to Shool", description: "Please go to school", createdAt: Date().toFormattedString(), createUserName: "tomoya", assignedUserName: "tomoya1", time: Date.init(timeIntervalSinceNow: 60).toFormattedString(), location: "東京都新宿区戸塚1-1-1 早稲田大学")
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Do any additional setup after loading the view.
         tableView.register(DefaultTableViewCell.self, forCellReuseIdentifier: "myTaskTableViewCell")
         tableView.delegate = self
         tableView.dataSource = self
         
         view.addSubview(tableView)
-        view.addSubview(addMyTaskButton)
+        view.addSubview(addFriendTaskButton)
         
         
         configureConstraints()
@@ -51,9 +49,8 @@ class MyTaskViewController: UIViewController {
     }
 }
 
-extension MyTaskViewController: UITableViewDelegate, UITableViewDataSource {
+extension FriendTaskViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(viewModel.tasks.count)
         return viewModel.tasks.count
     }
     
@@ -68,37 +65,34 @@ extension MyTaskViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension MyTaskViewController: IndicatorInfoProvider {
-    func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        "MyTask"
-    }
-}
-
-extension MyTaskViewController {
+extension FriendTaskViewController {
     private func configureConstraints() {
         tableView.snp.makeConstraints { make in
             make.top.equalTo(view)
             make.right.left.bottom.equalTo(view)
         }
         
-        addMyTaskButton.snp.makeConstraints { make in
+        addFriendTaskButton.snp.makeConstraints { make in
             make.bottom.equalTo(view).offset(-16)
             make.right.equalTo(view).offset(-16)
             make.width.height.equalTo(60)
         }
     }
-    
+}
+
+extension FriendTaskViewController {
     private func configureViewModel() {
-        viewModel = MyTaskViewModel(firebaseActionModel: FirebaseActionModel())
+        viewModel = FriendTaskViewModel(firebaseActionModel: FirebaseActionModel())
         
-        let input = MyTaskViewModel.Input(addMyTaskButtonTapped: addMyTaskButton.rx.tap.asDriver(),
-                                          viewWillAppear: rx.viewWillAppear.asDriver())
+        let input = FriendTaskViewModel.Input(loadView: rx.loadView.asDriver(),
+                                              viewWillAppear: rx.viewWillAppear.asDriver(),
+                                              addFriendTaskButtonTapped: addFriendTaskButton.rx.tap.asDriver())
+        
         let output = viewModel.build(input: input)
         
         output
             .reloadData
             .drive(onNext: { _ in
-                print("reload")
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -109,5 +103,11 @@ extension MyTaskViewController {
                 self.present(CreateTaskViewController(), animated: true, completion: nil)
             })
         .disposed(by: disposeBag)
+    }
+}
+
+extension FriendTaskViewController: IndicatorInfoProvider {
+    func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
+        "FriendTask"
     }
 }

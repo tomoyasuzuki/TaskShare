@@ -17,10 +17,9 @@ class TopViewController: TopTabBarPagerViewController {
         super.viewDidLoad()
         Auth.auth().signIn(withEmail: "tomoya.s0121@icloud.com", password: "tomoya0121") { _, error in
             guard error == nil else {
-                print("error: \(error!.localizedDescription)")
+                print("login error: \(error!.localizedDescription)")
                 return
             }
         }
-        
     }
 }

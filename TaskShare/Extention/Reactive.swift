@@ -15,6 +15,10 @@ extension Reactive where Base: UIViewController {
         return ControlEvent(events: sentMessage(selector).map { _ in })
     }
     
+    var loadView: ControlEvent<Void> {
+        return controlEvent(for: #selector(UIViewController.loadView))
+    }
+    
     var viewWillAppear: ControlEvent<Void> {
         return controlEvent(for: #selector(UIViewController.viewWillAppear))
     }

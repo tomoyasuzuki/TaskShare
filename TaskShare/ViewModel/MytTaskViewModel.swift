@@ -6,19 +6,20 @@
 //  Copyright © 2019 tomoya.suzuki. All rights reserved.
 //
 
-import RxSwift
-import RxCocoa
 import FirebaseFirestore
+import RxCocoa
+import RxSwift
 
 final class MyTaskViewModel {
-    
     private var firebaseActionModel: FirebaseActionModel!
     
     var tasks = [TaskModel]()
+    var friends = [UserModel]()
     
     init(firebaseActionModel: FirebaseActionModel) {
         self.firebaseActionModel = firebaseActionModel
     }
+    
     struct Input {
         let addMyTaskButtonTapped: Driver<Void>
         let viewWillAppear: Driver<Void>
@@ -29,21 +30,21 @@ final class MyTaskViewModel {
         let reloadData: Driver<Void>
     }
     
-    func build(input: Input) -> Output {
+    func build(input: Input) -> Output {        
         let tasks = input.viewWillAppear
+            .asObservable()
             .flatMap { [unowned self] _ in
-                return self.firebaseActionModel
-                .updateTask()
-                .map { [unowned self] snapshot in
-                    self.firebaseActionModel.handleSnapshot(snap: snapshot) { tasks in
-                        self.tasks = tasks
-                    }
-                }
-                .map { _ in () }
-                .asDriver(onErrorDriveWith: Driver.empty())
+                self.firebaseActionModel.updateTask()
             }
+            .map { [unowned self] snapshot in
+                self.firebaseActionModel.handleTaskSnapshot(snap: snapshot) { tasks in
+                    self.tasks = tasks
+                }
+            }
+            .map { _ in () }
+            .asDriver(onErrorDriveWith: Driver.empty())
         
-        
-        return Output(presentViewController: input.addMyTaskButtonTapped, reloadData: tasks)
+        return Output(presentViewController: input.addMyTaskButtonTapped,
+                      reloadData: tasks.asDriver(onErrorDriveWith: Driver.empty()))
     }
 }
